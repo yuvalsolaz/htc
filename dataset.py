@@ -13,9 +13,17 @@ def load_data(data_file=r'data/ut-sample.csv'):
 
 def create_dataset(table, field_name):
     df = pd.DataFrame()
+
+    print (f'set geo fields as features')
     df[geo] = table[geo]
+    print ()
     df['label'] = table[field_name]
+
+
     return df
+
+
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
