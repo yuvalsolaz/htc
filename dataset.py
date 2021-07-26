@@ -1,5 +1,5 @@
-import sys
 import pandas as pd
+import numpy.random as random
 from sklearn.model_selection import train_test_split
 
 
@@ -9,6 +9,15 @@ def load_data(data_file=r'data/ut-sample.csv'):
     print (f'loading {data_file}...')
     df = pd.read_csv(data_file)
     print(f'{df.shape} records loaded')
+    return df
+
+
+def add_random_field(df, field_name, categories:list):
+    def choose_category(categories):
+        index = random.randint(low=0, high=len(categories))
+        return categories[index]
+
+    df[field_name] = df.apply(lambda x : choose_category(categories=categories),axis=1)
     return df
 
 
