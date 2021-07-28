@@ -6,7 +6,7 @@ from classifier import classify, classifiers, names
 from presentation import draw
 
 if __name__ == '__main__':
-    if len(sys.argv) < 4:
+    if len(sys.argv) < 3:
         print(f'usage python {sys.argv[0]} <table_name> <field_name>')
         exit(1)
 
@@ -32,6 +32,6 @@ if __name__ == '__main__':
                            'classifier':name,
                            'score':score})
 
-    print(pd.DataFrame(results.head(20)))
+    print(pd.DataFrame(results))
 
 
