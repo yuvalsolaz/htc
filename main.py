@@ -28,10 +28,17 @@ if __name__ == '__main__':
             print(f'start classify {field_name} label with {name}...')
             score = classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, clf=clf, clf_name=name)
             print ( f'{name} finished with {score} score')
-            results.append({'field':field_name,
-                           'classifier':name,
-                           'score':score})
+            results.append({'field_name':field_name,
+                            'classifier':clf,
+                            'calssifier_name':name,
+                            'score':score})
 
     print(pd.DataFrame(results))
+    result = results[0]
+    draw(X_train, X_test, y_train, y_test,
+         field_name=result['field_name'],
+         clf = result['classifier'],
+         clf_name=result['calssifier_name'],
+         score=results[0]['score'])
 
 

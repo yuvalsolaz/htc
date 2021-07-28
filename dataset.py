@@ -28,7 +28,7 @@ def create_dataset(table, field_name):
     X = table[geo]
     print(f'set {field_name} field as label')
     y = table[field_name]
-    test_size = .30
+    test_size = .10
     print(f'split train test {(1-test_size)*100}% - {test_size* 100}%')
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = test_size, random_state = 42)
     return X_train, X_test, y_train, y_test
