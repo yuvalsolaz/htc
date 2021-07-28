@@ -1,7 +1,9 @@
 import sys
+import pandas as pd
 from dataset import load_data, create_dataset, add_random_field
-from classifier import classify
+from classifier import classify, classifiers, names
 
+from presentation import draw
 
 if __name__ == '__main__':
     if len(sys.argv) < 4:
@@ -10,15 +12,26 @@ if __name__ == '__main__':
 
     table_name = sys.argv[1]
     table = load_data(table_name)
-    field_names = sys.argv[1:]
+    field_names = sys.argv[2:]
+
+    results = []
     for field_name in field_names:
         if field_name not in table.columns:
             table = add_random_field(df=table,field_name=field_name,categories=['XXX', 'YYY', 'ZZZ', 'XYZ', 'UNKNOWN'])
 
         print(f'creating data set from {field_name} field on {table_name} table...')
         X_train, X_test, y_train, y_test = create_dataset(table=table,field_name=field_name)
-        print(X_train.head(), y_train.head())
+        #print(X_train.head(), y_train.head())
 
-        print('start classify...')
-        classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test)
+        # iterate over classifiers
+        for name, clf in zip(names, classifiers):
+            print(f'start classify {field_name} label with {name}...')
+            score = classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, clf=clf, clf_name=name)
+            print ( f'{name} finished with {score} score')
+            results.append({'field':field_name,
+                           'classifier':name,
+                           'score':score})
+
+    print(pd.DataFrame(results.head(20)))
+
 
