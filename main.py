@@ -3,7 +3,7 @@ import pandas as pd
 from dataset import load_data, create_dataset, add_random_field
 from classifier import classify, classifiers, names
 
-from presentation import draw
+from presentation import draw_labels
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
@@ -21,6 +21,7 @@ if __name__ == '__main__':
 
         print(f'creating data set from {field_name} field on {table_name} table...')
         X_train, X_test, y_train, y_test = create_dataset(table=table,field_name=field_name)
+        draw_labels(X=X_test, y=y_test)
         #print(X_train.head(), y_train.head())
 
         # iterate over classifiers
@@ -35,10 +36,10 @@ if __name__ == '__main__':
 
     print(pd.DataFrame(results))
     result = results[0]
-    draw(X_train, X_test, y_train, y_test,
-         field_name=result['field_name'],
-         clf = result['classifier'],
-         clf_name=result['calssifier_name'],
-         score=results[0]['score'])
+    # draw(X_train, X_test, y_train, y_test,
+    #      field_name=result['field_name'],
+    #      clf = result['classifier'],
+    #      clf_name=result['calssifier_name'],
+    #      score=results[0]['score'])
 
 

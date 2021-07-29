@@ -1,27 +1,20 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from sklearn import preprocessing
 
-def draw(X_train, X_test, y_train, y_test, field_name, clf, clf_name, score):
-    figure = plt.figure(figsize=(27, 9))
-
-
-    h = .02  # step size in the mesh
-    x_min, x_max = X_train['LAT'].min() - .5, X_train['LAT'].max() + .5
-    y_min, y_max = X_train['LON'].min() - .5, X_train['LON'].max() + .5
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
-
+def draw_labels(X, y):
+    # figure = plt.figure(figsize=(20, 6))
     # just plot the dataset first
-    # cm_bright = ListedColormap(['#FF0000', '#0000FF'])
-    cm_blues = plt.set_cmap('Blues')
-    ax = plt.subplot(1,1,1)#  plt.subplot(len(field_names), len(clfs) + 1, i)
+    cm_colors = plt.set_cmap('Dark2')
     #
     # Plot the training points
     #  ax.set_title('train data')
     le = preprocessing.LabelEncoder()
-    # le.fit(y_train)
-    # ax.scatter(X_train['LAT'], X_train['LON'], c=le.transform(y_train), cmap=cm_blues, edgecolors='k')
+    le.fit(y)
+    plt.scatter(X['LON'], X['LAT'], c=le.transform(y), cmap=cm_colors, edgecolors='k')
+    plt.show()
+
+'''    
 
     # Plot the testing points
     le.fit(y_test)
@@ -119,3 +112,4 @@ def draw_dataset(X_train, X_test, y_train, y_test, field_name, clf, clf_name, sc
     ax.set_yticks(())
     plt.tight_layout()
     plt.show()
+'''
