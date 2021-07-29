@@ -2,17 +2,15 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import preprocessing
 
-def draw_labels(X, y):
-    # figure = plt.figure(figsize=(20, 6))
-    # just plot the dataset first
+'''
+    plot samples with colored labels 
+'''
+def draw_labels(X, y, ax, title):
     cm_colors = plt.set_cmap('Dark2')
-    #
-    # Plot the training points
-    #  ax.set_title('train data')
     le = preprocessing.LabelEncoder()
     le.fit(y)
-    plt.scatter(X['LON'], X['LAT'], c=le.transform(y), cmap=cm_colors, edgecolors='k')
-    plt.show()
+    ax.set_title(title)
+    ax.scatter(X['LON'], X['LAT'], c=le.transform(y), cmap=cm_colors, edgecolors='k')
 
 '''    
 

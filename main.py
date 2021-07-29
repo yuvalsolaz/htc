@@ -1,5 +1,7 @@
 import sys
 import pandas as pd
+import matplotlib.pyplot as plt
+
 from dataset import load_data, create_dataset, add_random_field
 from classifier import classify, classifiers, names
 
@@ -21,8 +23,12 @@ if __name__ == '__main__':
 
         print(f'creating data set from {field_name} field on {table_name} table...')
         X_train, X_test, y_train, y_test = create_dataset(table=table,field_name=field_name)
-        draw_labels(X=X_test, y=y_test)
-        #print(X_train.head(), y_train.head())
+
+        figure = plt.figure(figsize=(12,12))
+        fig, axs = plt.subplots(1, 2, 'all')
+        draw_labels(X=X_train, y=y_train, ax=axs[0], title='train')
+        draw_labels(X=X_test , y=y_test , ax=axs[1], title='test')
+        plt.show()
 
         # iterate over classifiers
         for name, clf in zip(names, classifiers):
