@@ -2,10 +2,9 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from dataset import load_data, create_dataset, add_random_field
-from classifier import classify, classifiers, names
-
-from presentation import draw_labels
+from dataset import load_data, create_dataset, add_random_field, geo
+from classifier import classify, classifiers
+from presentation import draw_labels, draw_decision_boundary
 
 if __name__ == '__main__':
     if len(sys.argv) < 3:
@@ -17,35 +16,25 @@ if __name__ == '__main__':
     field_names = sys.argv[2:]
 
     results = []
-    for field_name in field_names:
-        if field_name not in table.columns:
-            table = add_random_field(df=table,field_name=field_name,categories=['XXX', 'YYY', 'ZZZ', 'XYZ', 'UNKNOWN'])
-
+    fig, axs = plt.subplots(len(field_names), 1, 'all')
+    for i, field_name in enumerate(field_names):
         print(f'creating data set from {field_name} field on {table_name} table...')
         X_train, X_test, y_train, y_test = create_dataset(table=table,field_name=field_name)
+        # draw_labels(X=X_train, y=y_train, ax=axs[0], title='train')
+        draw_labels(X=X_test , y=y_test , ax=axs[i], title='test')
 
-        figure = plt.figure(figsize=(12,12))
-        fig, axs = plt.subplots(1, 2, 'all')
-        draw_labels(X=X_train, y=y_train, ax=axs[0], title='train')
-        draw_labels(X=X_test , y=y_test , ax=axs[1], title='test')
-        plt.show()
-
-        # iterate over classifiers
-        for name, clf in zip(names, classifiers):
-            print(f'start classify {field_name} label with {name}...')
-            score = classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, clf=clf, clf_name=name)
-            print ( f'{name} finished with {score} score')
-            results.append({'field_name':field_name,
-                            'classifier':clf,
-                            'calssifier_name':name,
-                            'score':score})
-
+        # select classifier:
+        clf = classifiers[0]
+        clf_name = str(clf)
+        print(f'start classify {field_name} label with {clf_name}...')
+        score = classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, clf=clf)
+        print ( f'{clf_name} finished with {score} score')
+        results.append({'field_name':field_name, 'classifier':clf, 'calssifier_name':clf_name, 'score':score})
+        print(f'set {field_name} field as label')
+        draw_decision_boundary(X=table[geo], clf=clf, ax=axs[i],
+                               title = f'decision boundaries for {clf_name} with {field_name} label')
     print(pd.DataFrame(results))
-    result = results[0]
-    # draw(X_train, X_test, y_train, y_test,
-    #      field_name=result['field_name'],
-    #      clf = result['classifier'],
-    #      clf_name=result['calssifier_name'],
-    #      score=results[0]['score'])
+    plt.show()
+    pass
 
 
