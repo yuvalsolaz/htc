@@ -21,8 +21,8 @@ if __name__ == '__main__':
         print(f'creating data set from {field_name} field on {table_name} table...')
         X,y = create_dataset(table=table, field_name=field_name)
         X_train, X_test, y_train, y_test = split_dataset(X, y)
-        # draw_labels(X=X_train, y=y_train, ax=axs[0], title='train')
-        draw_labels(X=X_test , y=y_test , ax=axs[i], title='test')
+        draw_labels(X=X_train, y=y_train, ax=axs[0], title='train')
+        # draw_labels(X=X_test , y=y_test , ax=axs[i], title='test')
 
         # select classifier:
         clf = classifiers[0]
@@ -33,7 +33,7 @@ if __name__ == '__main__':
         results.append({'field_name':field_name, 'classifier':clf, 'calssifier_name':clf_name, 'score':score})
         print(f'set {field_name} field as label')
         draw_decision_boundary(X=X, clf=clf, ax=axs[i],
-                               title = f'decision boundaries for {clf_name} with {field_name} label')
+                               title = f'decision boundaries for {clf_name} with {field_name} label {score} score')
     print(pd.DataFrame(results))
     plt.show()
     pass
