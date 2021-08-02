@@ -1,6 +1,6 @@
 import sys
 import pandas as pd
-from dataset import load_data, create_dataset, split_dataset, geo
+from dataset import load_data, create_dataset, split_dataset, GEO_FIELDS
 from classifier import classify, classifiers
 
 DRAW_FIGURE = False
@@ -11,13 +11,17 @@ if DRAW_FIGURE:
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3:
-        print(f'usage python {sys.argv[0]} <table_name> <field_name>')
+    if len(sys.argv) < 2:
+        print(f'usage python {sys.argv[0]} <table_name> <fields names> optional')
         exit(1)
 
     table_name = sys.argv[1]
     table = load_data(table_name)
-    field_names = sys.argv[2:]
+
+    if len(sys.argv) > 2:
+        field_names = sys.argv[2:]
+    else:
+        field_names = set(table.columns[1:]) - set(GEO_FIELDS)
 
     results = []
     if DRAW_FIGURE:

@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
-geo = ['LAT', 'LON']
+GEO_FIELDS = ['LAT', 'LON']
 
 def load_data(data_file=r'data/ut-sample.csv'):
     print (f'loading {data_file}...')
@@ -13,13 +13,13 @@ def load_data(data_file=r'data/ut-sample.csv'):
     return df
 
 def create_dataset(table, field_name):
-    df = table.dropna(subset=geo + [field_name], inplace=False)
+    df = table.dropna(subset=GEO_FIELDS + [field_name], inplace=False)
     if df.shape[0] < 10:
         print(f'only {df.shape[0]} values after drop nan \n  useless field: {field_name}')
         return None, None
     print(f'{df.shape} after drop nan')
     print ('set geo fields as X features')
-    X = df[geo]
+    X = df[GEO_FIELDS]
 
     print ('standartize feature values')
     X = StandardScaler().fit_transform(X)
