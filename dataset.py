@@ -8,21 +8,24 @@ geo = ['LAT', 'LON']
 
 def load_data(data_file=r'data/ut-sample.csv'):
     print (f'loading {data_file}...')
-    df = pd.read_csv(data_file)
+    df = pd.read_csv(data_file, dtype=str)
     print(f'{df.shape} records loaded')
     return df
 
 def create_dataset(table, field_name):
-    table.dropna(subset=geo + [field_name], inplace=True)
-    print(f'{table.shape} after drop nan')
+    df = table.dropna(subset=geo + [field_name], inplace=False)
+    if df.shape[0] < 10:
+        print(f'only {df.shape[0]} values after drop nan \n  useless field: {field_name}')
+        return None, None
+    print(f'{df.shape} after drop nan')
     print ('set geo fields as X features')
-    X = table[geo]
+    X = df[geo]
 
     print ('standartize feature values')
     X = StandardScaler().fit_transform(X)
 
     print(f'set {field_name} field as label')
-    y = table[field_name]
+    y = df[field_name]
     return X, y
 
 def split_dataset(X, y):
