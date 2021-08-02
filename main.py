@@ -1,14 +1,10 @@
 import sys
 import pandas as pd
+import matplotlib.pyplot as plt
+
+from presentation import draw_labels, draw_decision_boundary
 from dataset import load_data, create_dataset, split_dataset, GEO_FIELDS
 from classifier import classify, classifiers
-
-DRAW_FIGURE = False
-
-if DRAW_FIGURE:
-    import matplotlib.pyplot as plt
-    from presentation import draw_labels, draw_decision_boundary
-
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -21,12 +17,10 @@ if __name__ == '__main__':
     if len(sys.argv) > 2:
         field_names = sys.argv[2:]
     else:
-        field_names = set(table.columns[1:]) - set(GEO_FIELDS)
+        field_names = list(set(table.columns[1:]) - set(GEO_FIELDS) - set(['HASH','ID']))
 
     results = []
-    if DRAW_FIGURE:
-        fig, axs = plt.subplots(len(field_names), 1, 'all')
-
+    fig, axs = plt.subplots(len(field_names), 2, 'none', figsize=(17,12))
     for i, field_name in enumerate(field_names):
         print(f'creating data set from {field_name} field on {table_name} table...')
         X,y = create_dataset(table=table, field_name=field_name)
@@ -39,11 +33,6 @@ if __name__ == '__main__':
             continue
 
         X_train, X_test, y_train, y_test = split_dataset(X, y)
-        if DRAW_FIGURE:
-            draw_labels(X=X_train, y=y_train, ax=axs[0], title='train')
-            draw_labels(X=X_test , y=y_test , ax=axs[i], title='test')
-
-        # select classifier:
         clf = classifiers[0]
         clf_name = str(clf)
         print(f'start classify {field_name} label with {clf_name}...')
@@ -53,12 +42,12 @@ if __name__ == '__main__':
                         'classes_count':classes_count,
                         'classifier_name':clf_name,
                         'score':score})
-        if DRAW_FIGURE:
-            draw_decision_boundary(X=X, clf=clf, ax=axs[i],
-                                   title = f'decision boundaries for {clf_name} with {field_name} label {score} score')
+
+        draw_labels(X=X_test , y=y_test , ax=axs[i,0], title='test')
+        draw_decision_boundary(X=X, clf=clf, ax=axs[i,1],
+                              title = f'decision line {field_name} label {classes_count} classes {score} score')
     print(pd.DataFrame(results))
-    if DRAW_FIGURE:
-        plt.show()
+    plt.show()
     pass
 
 
