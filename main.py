@@ -17,7 +17,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 2:
         field_names = sys.argv[2:]
     else:
-        field_names = list(set(table.columns[1:]) - set(GEO_FIELDS) - set(['HASH','ID']))
+        field_names = list(set(table.columns) - set(GEO_FIELDS) - set(['HASH','ID']))
 
     results = []
     fig, axs = plt.subplots(len(field_names), 2, 'none', figsize=(17,12))

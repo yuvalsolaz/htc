@@ -21,14 +21,16 @@ def draw_decision_boundary(X, clf, ax, title):
     y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
     xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
 
-    if hasattr(clf, "decision_function"):
-        Z = clf.decision_function(np.c_[xx.ravel(), yy.ravel()])
-    else:
-        Z = clf.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1]
+    Zp = clf.predict(np.c_[xx.ravel(), yy.ravel()])
+    unique, count = np.unique(Zp, return_counts=True)
+    argmax = np.argmax(count)
+    decision_class = unique[argmax]
+    print(f'decision class : {decision_class} with {count[argmax]} occurances')
 
     # Put the result into a color plot
-    le.fit(Z)
-    colors = le.transform(Z)
+    # le.fit(Z)
+    colors = [0,1]
+    Z = (Zp == decision_class).astype(int)
     Z = Z.reshape(xx.shape)
     ax.set_title(title)
     cm_colors = plt.set_cmap('Dark2')
