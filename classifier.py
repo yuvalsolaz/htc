@@ -9,6 +9,9 @@ from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
 
+from sklearn.metrics import precision_recall_fscore_support as score
+
+
 classifiers = [KNeighborsClassifier(5),
                SVC(kernel="linear", C=0.025),
                SVC(gamma=2, C=1),
@@ -24,6 +27,7 @@ classifiers = [KNeighborsClassifier(5),
 
 def classify(X_train, X_test, y_train, y_test, clf):
     clf.fit(X_train, y_train)
-    score = clf.score(X_test, y_test)
-    return score
+    pred_test = clf.predict(X_test)
+    precision, recall, f1score, _ = score(y_test,pred_test, average='macro', zero_division=0)
+    return precision, recall, f1score
 

@@ -20,7 +20,7 @@ if __name__ == '__main__':
         field_names = list(set(table.columns) - set(GEO_FIELDS) - set(['HASH','ID']))
 
     results = []
-    fig, axs = plt.subplots(len(field_names), 2, 'none', figsize=(17,12))
+    # fig, axs = plt.subplots(len(field_names), 2, 'none', figsize=(17,12))
     for i, field_name in enumerate(field_names):
         print(f'creating data set from {field_name} field on {table_name} table...')
         X,y = create_dataset(table=table, field_name=field_name)
@@ -36,18 +36,21 @@ if __name__ == '__main__':
         clf = classifiers[0]
         clf_name = str(clf)
         print(f'start classify {field_name} label with {clf_name}...')
-        score = classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, clf=clf)
-        print ( f'{clf_name} finished with {score} score')
+        precision, recall, fscore = classify(X_train=X_train, X_test=X_test, y_train=y_train, y_test=y_test, clf=clf)
+        print ( f'{clf_name} finished with {precision} precision {recall} recall {fscore} f1 score')
+
         results.append({'field_name':field_name,
                         'classes_count':classes_count,
                         'classifier_name':clf_name,
-                        'score':score})
+                        'precision':precision ,
+                        'recall':recall,
+                        'fscore':fscore})
 
-        draw_labels(X=X_test , y=y_test , ax=axs[i,0], title='test')
-        draw_decision_boundary(X=X, clf=clf, ax=axs[i,1],
-                              title = f'decision line {field_name} label {classes_count} classes {score} score')
-    print(pd.DataFrame(results))
-    plt.show()
+        # draw_labels(X=X_test , y=y_test , ax=axs[i,0], title='test')
+        # draw_decision_boundary(X=X, clf=clf, ax=axs[i,1],
+        #                       title = f'decision line {field_name} label {classes_count} classes {fscore} score')
+    print(pd.DataFrame(results).sort_values(by='fscore',ascending=False))
+    # plt.show()
     pass
 
 
