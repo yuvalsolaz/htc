@@ -14,7 +14,8 @@ def load_data(data_file=r'data/ut-sample.csv'):
 
 def create_dataset(table, field_name):
     df = table.dropna(subset=GEO_FIELDS + [field_name], inplace=False)
-    if df.shape[0] < 10:
+    df = df[df[field_name] != 'None']
+    if df.shape[0] < 100:
         print(f'only {df.shape[0]} values after drop nan \n  useless field: {field_name}')
         return None, None
     print(f'{df.shape} after drop nan')
